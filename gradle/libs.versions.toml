@@ -1,7 +1,7 @@
 [versions]
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "28"
-targetSdk = "34"
+targetSdk = "35"
 
 agp = "8.7.3"
 kotlin = "2.0.20"
@@ -28,6 +28,7 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 gson = "2.10.1"
 coil = "2.7.0"
+mockito = "4.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,9 @@ xerial-sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "xer
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "inject" }
 io-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
