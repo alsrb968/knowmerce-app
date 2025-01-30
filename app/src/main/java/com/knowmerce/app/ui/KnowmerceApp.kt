@@ -2,7 +2,10 @@
 
 package com.knowmerce.app.ui
 
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -18,7 +21,7 @@ fun KnowmerceApp(
         NavHost(
             modifier = Modifier,
             navController = appState.navController,
-            startDestination = Screen.Splash.route
+            startDestination = Screen.Home.route
         ) {
             composable(Screen.Splash.route) { backStackEntry ->
                 SplashScreen(
