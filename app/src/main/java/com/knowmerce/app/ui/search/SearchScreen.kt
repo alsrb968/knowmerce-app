@@ -1,15 +1,13 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.knowmerce.app.ui.search
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,6 +21,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -34,8 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,6 +43,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
@@ -76,14 +74,21 @@ fun SearchScreen(
     }
 
     BottomSheetScaffold(
-        modifier = modifier,
+        modifier = modifier.statusBarsPadding(),
+        topBar = {
+            TopAppBar(
+
+                title = {
+                    Text(text = "검색")
+                },
+
+            )
+        },
         scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = sheetState
         ),
-        sheetMaxWidth = LocalConfiguration.current.screenWidthDp.dp,
         sheetPeekHeight = 100.dp,
-        sheetDragHandle = null,
-        sheetContainerColor = Color.Transparent,
+//        sheetContainerColor = Color.Transparent,
         sheetShape = RoundedCornerShape(
             topStart = 8.dp,
             topEnd = 8.dp,
@@ -125,22 +130,24 @@ fun SearchScreen(
     onFocusChanged: (Boolean) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("카리나") }
-    val items = listOf("Apple", "Banana", "Cherry", "Date", "Grape", "Lemon")
-    val filteredItems = items.filter { it.contains(searchQuery, ignoreCase = true) }
 
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         SearchBar(
+            modifier = Modifier,
             query = searchQuery,
             onQueryChange = { searchQuery = it },
             onSearch = onSearch,
             onFocusChanged = onFocusChanged
         )
 
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Fixed(2),
-            state = rememberLazyGridState(),
+        LazyVerticalStaggeredGrid(
+            modifier = Modifier
+//                .fillMaxSize()
+            ,
+            columns = StaggeredGridCells.Fixed(2),
+            state = rememberLazyStaggeredGridState(),
             contentPadding = PaddingValues(4.dp),
         ) {
             items(searchResults.size) { item ->
