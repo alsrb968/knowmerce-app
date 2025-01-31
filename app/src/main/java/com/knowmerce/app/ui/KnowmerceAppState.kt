@@ -5,7 +5,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Lifecycle
@@ -35,10 +39,6 @@ class KnowmerceAppState(
 
     fun refreshOnline() {
         isOnline = checkIfOnline()
-    }
-
-    fun navigateToSplash() {
-        navController.navigate(Screen.Splash.route)
     }
 
     fun navigateToHome(from: NavBackStackEntry) {

@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.knowmerce.app.ui.search.SearchScreen
+import com.knowmerce.app.ui.home.HomeScreen
 import com.knowmerce.app.ui.splash.SplashScreen
 
 @Composable
@@ -32,7 +32,7 @@ fun KnowmerceApp(
             }
 
             composable(Screen.Home.route) { backstackEntry ->
-                SearchScreen()
+                HomeScreen()
             }
         }
     } else {

@@ -1,4 +1,4 @@
-package com.knowmerce.app.ui.search
+package com.knowmerce.app.ui.home.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

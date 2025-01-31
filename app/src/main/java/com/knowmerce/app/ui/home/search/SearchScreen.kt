@@ -1,35 +1,25 @@
-package com.knowmerce.app.ui.search
+package com.knowmerce.app.ui.home.search
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -40,85 +30,46 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    onSnackbar: (String) -> Unit,
+    onBottomSheetExpand: (Boolean) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val sheetState = rememberStandardBottomSheetState(
-        initialValue = SheetValue.Expanded,//PartiallyExpanded
-        skipHiddenState = true
-    )
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is SearchUiEffect.ShowToast -> {
-//                    scope.launch {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    snackbarHostState.showSnackbar(effect.message)
-//                    }
-                }
+                is SearchUiEffect.ShowToast -> onSnackbar(effect.message)
             }
         }
     }
-
-    BottomSheetScaffold(
-        modifier = modifier.statusBarsPadding(),
-        topBar = {
-            TopAppBar(
-
-                title = {
-                    Text(text = "검색")
-                },
-
-            )
-        },
-        scaffoldState = rememberBottomSheetScaffoldState(
-            bottomSheetState = sheetState
-        ),
-        sheetPeekHeight = 100.dp,
-//        sheetContainerColor = Color.Transparent,
-        sheetShape = RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 8.dp,
-            bottomStart = 0.dp,
-            bottomEnd = 0.dp
-        ),
-        sheetContent = {
+    when (val s = state) {
+        is SearchUiState.Loading -> {
             SearchScreen(
-                searchResults = (state as? SearchUiState.Ready)?.searchResults ?: emptyList(),
+                modifier = modifier,
+                searchResults = emptyList(),
                 onSearch = { query ->
                     viewModel.sendIntent(SearchUiIntent.Search(query))
                 },
-                onFocusChanged = { isFocused ->
-                    Timber.d("isFocused: $isFocused")
-                    if (isFocused) {
-
-                        scope.launch {
-                            sheetState.expand()
-                        }
-                    }
-                }
+                onFocusChanged = onBottomSheetExpand
             )
-        },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
         }
-    ) {
-
+        is SearchUiState.Ready -> {
+            SearchScreen(
+                modifier = modifier,
+                searchResults = s.searchResults,
+                onSearch = { query ->
+                    viewModel.sendIntent(SearchUiIntent.Search(query))
+                },
+                onFocusChanged = onBottomSheetExpand
+            )
+        }
     }
-
 
 }
 
