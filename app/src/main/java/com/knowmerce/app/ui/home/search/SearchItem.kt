@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.knowmerce.core.domain.model.SearchContent
 import com.knowmerce.core.domain.model.SearchVideoClip
+import com.knowmerce.core.domain.model.displayedDatetime
 
 @Composable
 fun SearchItem(
@@ -66,12 +67,12 @@ fun SearchItem(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             ItemText(
-                text = search.datetime,
+                text = search.displayedDatetime,
             )
 
             if (search is SearchVideoClip) {
                 ItemText(
-                    text = search.playTime,
+                    text = search.displayedPlayTime,
                 )
             }
 

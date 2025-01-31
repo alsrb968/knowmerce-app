@@ -25,7 +25,7 @@ class SearchUseCase @Inject constructor(
             searchResults.add(
                 SearchImage(
                     thumbnailUrl = it.thumbnailUrl,
-                    title = it.collection,
+                    title = it.displaySiteName,
                     datetime = it.datetime,
                 )
             )

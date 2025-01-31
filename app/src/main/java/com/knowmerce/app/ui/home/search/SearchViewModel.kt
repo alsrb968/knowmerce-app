@@ -67,6 +67,7 @@ class SearchViewModel @Inject constructor(
             try {
                 Timber.i("search: $query")
                 val searchResults = searchUseCase(query)
+
                 _state.value = SearchUiState.Ready(
                     searchResults = searchResults
                 )
