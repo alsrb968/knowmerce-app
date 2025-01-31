@@ -1,7 +1,7 @@
 package com.knowmerce.core.domain.repository
 
-import com.knowmerce.core.domain.model.ImageSearch
-import com.knowmerce.core.domain.model.VideoClipSearch
+import com.knowmerce.core.domain.model.remote.ImageSearch
+import com.knowmerce.core.domain.model.remote.VideoClipSearch
 
 interface SearchRepository {
     suspend fun searchImage(

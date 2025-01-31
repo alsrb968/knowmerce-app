@@ -26,11 +26,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.knowmerce.core.domain.model.SearchContent
+import com.knowmerce.core.domain.model.SearchVideoClip
 
 @Composable
 fun SearchItem(
     modifier: Modifier = Modifier,
-    search: SearchUiModel
+    search: SearchContent
 ) {
     var aspectRatio by remember { mutableFloatStateOf(1f) }
 
@@ -67,7 +69,7 @@ fun SearchItem(
                 text = search.datetime,
             )
 
-            if (search.mediaType == "video") {
+            if (search is SearchVideoClip) {
                 ItemText(
                     text = search.playTime,
                 )

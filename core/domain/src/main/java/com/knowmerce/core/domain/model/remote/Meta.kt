@@ -1,4 +1,4 @@
-package com.knowmerce.core.domain.model
+package com.knowmerce.core.domain.model.remote
 
 data class Meta(
     val totalCount: Int,

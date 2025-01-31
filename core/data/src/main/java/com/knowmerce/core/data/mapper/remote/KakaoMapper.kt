@@ -5,11 +5,11 @@ import com.knowmerce.core.data.model.remote.ImageSearchResponse
 import com.knowmerce.core.data.model.remote.MetaResponse
 import com.knowmerce.core.data.model.remote.VideoClipDocumentResponse
 import com.knowmerce.core.data.model.remote.VideoClipSearchResponse
-import com.knowmerce.core.domain.model.ImageDocument
-import com.knowmerce.core.domain.model.ImageSearch
-import com.knowmerce.core.domain.model.Meta
-import com.knowmerce.core.domain.model.VideoClipDocument
-import com.knowmerce.core.domain.model.VideoClipSearch
+import com.knowmerce.core.domain.model.remote.ImageDocument
+import com.knowmerce.core.domain.model.remote.ImageSearch
+import com.knowmerce.core.domain.model.remote.Meta
+import com.knowmerce.core.domain.model.remote.VideoClipDocument
+import com.knowmerce.core.domain.model.remote.VideoClipSearch
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

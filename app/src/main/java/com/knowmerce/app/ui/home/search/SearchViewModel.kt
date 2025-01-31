@@ -2,7 +2,8 @@ package com.knowmerce.app.ui.home.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.knowmerce.core.domain.repository.SearchRepository
+import com.knowmerce.core.domain.model.SearchContent
+import com.knowmerce.core.domain.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,18 +14,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-data class SearchUiModel(
-    val thumbnailUrl: String,
-    val title: String,
-    val datetime: String,
-    val playTime: String,
-    val mediaType: String,
-)
-
 sealed interface SearchUiState {
     data object Loading : SearchUiState
     data class Ready(
-        val searchResults: List<SearchUiModel>,
+        val searchResults: List<SearchContent>,
     ) : SearchUiState
 }
 
@@ -38,7 +31,7 @@ sealed interface SearchUiEffect {
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val searchUseCase: SearchUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Loading)
@@ -73,45 +66,13 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 Timber.i("search: $query")
-                val images = searchRepository.searchImage(
-                    query = query,
-                    page = 1,
-                    size = 10,
-                )
-                val videos = searchRepository.searchVideoClip(
-                    query = query,
-                    page = 1,
-                    size = 10,
-                )
-                val searchResults = mutableListOf<SearchUiModel>()
-                images.documents.map {
-                    searchResults.add(
-                        SearchUiModel(
-                            thumbnailUrl = it.thumbnailUrl,
-                            title = it.displaySiteName,
-                            datetime = it.datetime,
-                            playTime = "",
-                            mediaType = "image",
-                        )
-                    )
-                }
-                videos.documents.map {
-                    searchResults.add(
-                        SearchUiModel(
-                            thumbnailUrl = it.thumbnail,
-                            title = it.title,
-                            datetime = it.datetime,
-                            playTime = it.playTime,
-                            mediaType = "video",
-                        )
-                    )
-                }
-                searchResults.sortByDescending { it.datetime }
+                val searchResults = searchUseCase(query)
                 _state.value = SearchUiState.Ready(
                     searchResults = searchResults
                 )
             } catch (e: Exception) {
-                _effect.emit(SearchUiEffect.ShowToast(e.localizedMessage ?: "Unknown error"))
+                _state.value = SearchUiState.Loading
+                _effect.emit(SearchUiEffect.ShowToast(e.message ?: "Unknown error"))
             }
         }
     }

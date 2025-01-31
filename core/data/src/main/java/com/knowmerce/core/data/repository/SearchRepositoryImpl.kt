@@ -3,8 +3,8 @@ package com.knowmerce.core.data.repository
 import com.knowmerce.core.data.datasource.remote.KakaoDataSource
 import com.knowmerce.core.data.mapper.remote.toImageSearch
 import com.knowmerce.core.data.mapper.remote.toVideoClipSearch
-import com.knowmerce.core.domain.model.ImageSearch
-import com.knowmerce.core.domain.model.VideoClipSearch
+import com.knowmerce.core.domain.model.remote.ImageSearch
+import com.knowmerce.core.domain.model.remote.VideoClipSearch
 import com.knowmerce.core.domain.repository.SearchRepository
 import javax.inject.Inject
 

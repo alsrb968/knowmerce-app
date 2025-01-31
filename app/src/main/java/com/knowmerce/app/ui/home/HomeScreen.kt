@@ -1,6 +1,7 @@
 package com.knowmerce.app.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.knowmerce.app.ui.home.search.SearchScreen
@@ -64,6 +66,8 @@ fun HomeScreen(
         }
     }
 
+    val focusManager = LocalFocusManager.current
+
     BottomSheetScaffold(
         modifier = modifier,
         topBar = {
@@ -73,7 +77,8 @@ fun HomeScreen(
                     .onSizeChanged {
                         topBarHeight = it.height.dp
                         Timber.i("screenHeight: $screenHeight, topBarHeight: $topBarHeight")
-                    },
+                    }
+                    .clickable { focusManager.clearFocus() },
                 title = {
                     Text(text = "즐겨찾기")
                 },
