@@ -63,33 +63,39 @@ fun SearchItem(
                 .padding(4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Text(
-                modifier = Modifier
-                    .background(
-                        color = Color.Black.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(2.dp)
-                    )
-                    .padding(4.dp),
+            ItemText(
                 text = search.datetime,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
             )
 
-            Text(
-                modifier = Modifier
-                    .background(
-                        color = Color.Black.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(2.dp)
-                    )
-                    .padding(4.dp),
+            if (search.mediaType == "video") {
+                ItemText(
+                    text = search.playTime,
+                )
+            }
+
+            ItemText(
                 text = search.title,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
             )
         }
     }
+}
+
+@Composable
+fun ItemText(
+    modifier: Modifier = Modifier,
+    text: String
+) {
+    Text(
+        modifier = modifier
+            .background(
+                color = Color.Black.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(2.dp)
+            )
+            .padding(4.dp),
+        text = text,
+        color = Color.White,
+        style = MaterialTheme.typography.bodyMedium,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 }

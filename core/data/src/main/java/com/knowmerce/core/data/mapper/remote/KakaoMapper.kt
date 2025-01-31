@@ -22,7 +22,7 @@ fun String.toDateTime(): String {
 fun Int.toPlayTime(): String {
     val minutes = this / 60
     val seconds = this % 60
-    return "$minutes:$seconds"
+    return "%d:%02d".format(minutes, seconds)
 }
 
 fun MetaResponse.toMeta(): Meta {

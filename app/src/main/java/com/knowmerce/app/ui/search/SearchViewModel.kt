@@ -17,6 +17,8 @@ data class SearchUiModel(
     val thumbnailUrl: String,
     val title: String,
     val datetime: String,
+    val playTime: String,
+    val mediaType: String,
 )
 
 sealed interface SearchUiState {
@@ -88,6 +90,8 @@ class SearchViewModel @Inject constructor(
                             thumbnailUrl = it.thumbnailUrl,
                             title = it.displaySiteName,
                             datetime = it.datetime,
+                            playTime = "",
+                            mediaType = "image",
                         )
                     )
                 }
@@ -97,6 +101,8 @@ class SearchViewModel @Inject constructor(
                             thumbnailUrl = it.thumbnail,
                             title = it.title,
                             datetime = it.datetime,
+                            playTime = it.playTime,
+                            mediaType = "video",
                         )
                     )
                 }
