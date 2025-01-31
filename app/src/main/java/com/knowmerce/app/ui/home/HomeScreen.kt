@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.knowmerce.app.ui.home.search.SearchScreen
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +68,13 @@ fun HomeScreen(
 
     val focusManager = LocalFocusManager.current
 
+    LaunchedEffect(sheetState.currentValue) {
+        when (sheetState.currentValue) {
+            SheetValue.PartiallyExpanded -> focusManager.clearFocus()
+            else -> {}
+        }
+    }
+
     BottomSheetScaffold(
         modifier = modifier,
         topBar = {
@@ -76,9 +83,13 @@ fun HomeScreen(
                     .height(100.dp)
                     .onSizeChanged {
                         topBarHeight = it.height.dp
-                        Timber.i("screenHeight: $screenHeight, topBarHeight: $topBarHeight")
                     }
-                    .clickable { focusManager.clearFocus() },
+                    .clickable {
+                        scope.launch {
+                            focusManager.clearFocus()
+                            sheetState.partialExpand()
+                        }
+                    },
                 title = {
                     Text(text = "즐겨찾기")
                 },
@@ -111,8 +122,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .heightIn(
                         max = screenHeight - topBarHeight + statusBarHeight
-                    )
-                ,
+                    ),
                 onSnackbar = { message ->
                     onSnackbar(message)
                 },
