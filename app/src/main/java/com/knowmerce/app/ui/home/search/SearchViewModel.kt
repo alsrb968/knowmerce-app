@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 sealed interface SearchUiState {
@@ -68,7 +67,6 @@ class SearchViewModel @Inject constructor(
     private fun search(query: String) {
         viewModelScope.launch {
             try {
-                Timber.i("search: $query")
                 if (query.isBlank()) {
                     _state.value = SearchUiState.Loading
                     return@launch

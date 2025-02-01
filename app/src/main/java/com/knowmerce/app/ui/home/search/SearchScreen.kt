@@ -122,9 +122,7 @@ fun SearchBar(
         searchFlow
             .debounce(500)
             .collectLatest { text ->
-//                if (text.isNotEmpty()) {
                 onSearch(text)
-//                }
             }
     }
 
@@ -132,7 +130,7 @@ fun SearchBar(
         value = query,
         onValueChange = {
             onQueryChange(it)
-            searchFlow.value = it // Flow 업데이트
+            searchFlow.value = it
         },
         placeholder = { Text("검색어를 입력하세요") },
         leadingIcon = {

@@ -17,7 +17,7 @@ import com.knowmerce.app.ui.splash.SplashScreen
 fun KnowmerceApp(
     appState: KnowmerceAppState = rememberKnowmerceAppState()
 ) {
-    if (appState.isOnline) {
+//    if (appState.isOnline) {
         NavHost(
             modifier = Modifier,
             navController = appState.navController,
@@ -35,9 +35,9 @@ fun KnowmerceApp(
                 HomeScreen()
             }
         }
-    } else {
-        OfflineDialog { appState.refreshOnline() }
-    }
+//    } else {
+//        OfflineDialog { appState.refreshOnline() }
+//    }
 }
 
 @Composable

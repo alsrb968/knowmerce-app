@@ -26,9 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.knowmerce.core.domain.model.SearchContent
 
 @Composable
@@ -48,7 +51,12 @@ fun SearchItem(
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth(),
-            model = search.thumbnailUrl,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(search.thumbnailUrl)
+                .crossfade(true)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build(),
             contentScale = ContentScale.Crop,
             contentDescription = search.title,
             placeholder = rememberVectorPainter(image = Icons.Default.ImageSearch),
