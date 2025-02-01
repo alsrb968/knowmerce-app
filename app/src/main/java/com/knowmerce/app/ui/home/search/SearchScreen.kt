@@ -31,6 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -75,10 +76,11 @@ fun SearchScreen(
             }
 
             is SearchUiState.Ready -> {
-                val contents = s.searchContents.collectAsLazyPagingItems()
                 SearchScreen(
                     modifier = Modifier.fillMaxSize(),
-                    searchContents = contents,
+                    searchContents = s.searchContents.collectAsLazyPagingItems(),
+                    isFavorite = { viewModel.isFavorite(it) },
+                    toggleFavorite = { viewModel.sendIntent(SearchUiIntent.ToggleFavorite(it)) }
                 )
             }
         }
@@ -89,6 +91,8 @@ fun SearchScreen(
 fun SearchScreen(
     modifier: Modifier = Modifier,
     searchContents: LazyPagingItems<SearchContent>,
+    isFavorite: (SearchContent) -> Flow<Boolean>,
+    toggleFavorite: (SearchContent) -> Unit,
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -100,7 +104,8 @@ fun SearchScreen(
             searchContents[item]?.let { content ->
                 SearchItem(
                     search = content,
-                    onClick = { /* TODO */ }
+                    isFavorite = isFavorite(content),
+                    onClick = { toggleFavorite(content) }
                 )
             }
         }

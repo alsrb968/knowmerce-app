@@ -1,9 +1,11 @@
 package com.knowmerce.app.ui.home.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +15,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,16 +30,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.knowmerce.core.domain.model.SearchContent
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun SearchItem(
     modifier: Modifier = Modifier,
     search: SearchContent,
-    onClick: (() -> Unit)? = null,
+    isFavorite: Flow<Boolean>,
+    onClick: () -> Unit = {},
 ) {
     var aspectRatio by remember { mutableFloatStateOf(1f) }
 
@@ -46,7 +50,8 @@ fun SearchItem(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
-            .padding(4.dp),
+            .padding(4.dp)
+            .clickable { onClick() },
     ) {
         AsyncImage(
             modifier = Modifier
@@ -76,14 +81,19 @@ fun SearchItem(
                 .padding(4.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            ItemText(
-                text = search.displayedDatetime,
-            )
-
-            search.displayedPlayTime?.let {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
                 ItemText(
-                    text = it,
+                    text = search.displayedDatetime,
                 )
+
+                search.displayedPlayTime?.let {
+                    ItemText(
+                        text = it,
+                    )
+                }
             }
 
             ItemText(
@@ -91,18 +101,17 @@ fun SearchItem(
             )
         }
 
-        if (onClick != null) {
-            IconButton(
+        val isFav = isFavorite.collectAsStateWithLifecycle(false).value
+
+        if (isFav) {
+            Icon(
                 modifier = Modifier
-                    .align(Alignment.TopEnd),
-                onClick = onClick
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Keep",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp),
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = "Favorite",
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

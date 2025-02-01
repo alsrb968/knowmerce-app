@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.knowmerce.core.domain.model.SearchContent
+import com.knowmerce.core.domain.usecase.AddFavoriteUseCase
+import com.knowmerce.core.domain.usecase.IsFavoriteUseCase
+import com.knowmerce.core.domain.usecase.RemoveFavoriteUseCase
 import com.knowmerce.core.domain.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +29,7 @@ sealed interface SearchUiState {
 
 sealed interface SearchUiIntent {
     data class Search(val query: String) : SearchUiIntent
+    data class ToggleFavorite(val searchContent: SearchContent) : SearchUiIntent
 }
 
 sealed interface SearchUiEffect {
@@ -34,6 +39,9 @@ sealed interface SearchUiEffect {
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val isFavoriteUseCase: IsFavoriteUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Loading)
@@ -53,6 +61,7 @@ class SearchViewModel @Inject constructor(
             _intent.collectLatest { intent ->
                 when (intent) {
                     is SearchUiIntent.Search -> search(intent.query)
+                    is SearchUiIntent.ToggleFavorite -> toggleFavorite(intent.searchContent)
                 }
             }
         }
@@ -82,5 +91,25 @@ class SearchViewModel @Inject constructor(
                 _effect.emit(SearchUiEffect.ShowToast(e.message ?: "Unknown error"))
             }
         }
+    }
+
+    private fun toggleFavorite(searchContent: SearchContent) {
+        viewModelScope.launch {
+            try {
+                if (isFavorite(searchContent).first()) {
+                    removeFavoriteUseCase(searchContent)
+                    _effect.emit(SearchUiEffect.ShowToast("내 보관함에서 삭제되었습니다."))
+                } else {
+                    addFavoriteUseCase(searchContent)
+                    _effect.emit(SearchUiEffect.ShowToast("내 보관함에 추가되었습니다."))
+                }
+            } catch (e: Exception) {
+                _effect.emit(SearchUiEffect.ShowToast(e.message ?: "Unknown error"))
+            }
+        }
+    }
+
+    fun isFavorite(searchContent: SearchContent): Flow<Boolean> {
+        return isFavoriteUseCase(searchContent)
     }
 }

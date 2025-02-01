@@ -2,6 +2,7 @@ package com.knowmerce.core.data.di
 
 import android.content.Context
 import com.knowmerce.core.data.db.DocumentDao
+import com.knowmerce.core.data.db.FavoriteDao
 import com.knowmerce.core.data.db.SearchDatabase
 import dagger.Module
 import dagger.Provides
@@ -26,4 +27,10 @@ object DbModule {
     fun provideDocumentDao(
         database: SearchDatabase
     ): DocumentDao = database.documentDao()
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(
+        database: SearchDatabase
+    ): FavoriteDao = database.favoriteDao()
 }

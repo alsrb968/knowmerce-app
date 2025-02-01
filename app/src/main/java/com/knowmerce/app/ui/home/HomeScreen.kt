@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Inventory
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
@@ -37,6 +36,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.knowmerce.app.ui.home.favorite.FavoriteScreen
 import com.knowmerce.app.ui.home.search.SearchScreen
 import kotlinx.coroutines.launch
 
@@ -147,10 +147,11 @@ fun HomeScreen(
             SnackbarHost(snackbarHostState)
         }
     ) {
-        Button(
-            onClick = {
-                onSnackbar("즐겨찾기에 추가되었습니다.")
+        FavoriteScreen(
+            modifier = Modifier,
+            onSnackbar = { message ->
+                onSnackbar(message)
             }
-        ) { }
+        )
     }
 }

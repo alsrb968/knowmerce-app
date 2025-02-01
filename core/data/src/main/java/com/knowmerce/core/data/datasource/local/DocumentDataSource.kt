@@ -7,16 +7,13 @@ import javax.inject.Inject
 
 interface DocumentDataSource {
     suspend fun insertDocument(document: List<DocumentEntity>)
-
     suspend fun getLastDocument(keyword: String): DocumentEntity?
-
     fun getValidDocument(
         keyword: String,
         validTimestamp: Long
     ): PagingSource<Int, DocumentEntity>
 
     suspend fun deleteExpiredDocument(expiredTimestamp: Long)
-
     suspend fun deleteAllDocument()
 }
 

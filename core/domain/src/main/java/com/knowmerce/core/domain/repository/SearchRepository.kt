@@ -12,8 +12,10 @@ interface SearchRepository {
         val before5MinutesTimestamp = currentTimestamp - CACHE_DURATION
     }
 
-    fun search(
-        query: String,
-        pageSize: Int = 20,
-    ): Flow<PagingData<SearchContent>>
+    fun search(query: String, pageSize: Int = 20): Flow<PagingData<SearchContent>>
+    suspend fun addFavorite(searchContent: SearchContent)
+    suspend fun removeFavorite(searchContent: SearchContent)
+    suspend fun removeAllFavorites()
+    fun isFavorite(searchContent: SearchContent): Flow<Boolean>
+    fun getFavorites(pageSize: Int = 20): Flow<PagingData<SearchContent>>
 }

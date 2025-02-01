@@ -3,9 +3,12 @@ package com.knowmerce.core.data.di
 import com.knowmerce.core.data.api.KakaoApi
 import com.knowmerce.core.data.datasource.local.DocumentDataSource
 import com.knowmerce.core.data.datasource.local.DocumentDataSourceImpl
+import com.knowmerce.core.data.datasource.local.FavoriteDataSource
+import com.knowmerce.core.data.datasource.local.FavoriteDataSourceImpl
 import com.knowmerce.core.data.datasource.remote.KakaoDataSource
 import com.knowmerce.core.data.datasource.remote.KakaoDataSourceImpl
 import com.knowmerce.core.data.db.DocumentDao
+import com.knowmerce.core.data.db.FavoriteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,6 +25,16 @@ object DataSourceModule {
     ): DocumentDataSource {
         return DocumentDataSourceImpl(
             documentDao = documentDao
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDataSource(
+        favoriteDao: FavoriteDao
+    ): FavoriteDataSource {
+        return FavoriteDataSourceImpl(
+            favoriteDao = favoriteDao
         )
     }
 
