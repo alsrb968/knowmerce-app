@@ -25,6 +25,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,38 +49,7 @@ fun SearchScreen(
             }
         }
     }
-    when (val s = state) {
-        is SearchUiState.Loading -> {
-            SearchScreen(
-                modifier = modifier,
-                searchResults = emptyList(),
-                onSearch = { query ->
-                    viewModel.sendIntent(SearchUiIntent.Search(query))
-                },
-                onFocusChanged = onBottomSheetExpand
-            )
-        }
-        is SearchUiState.Ready -> {
-            SearchScreen(
-                modifier = modifier,
-                searchResults = s.searchResults,
-                onSearch = { query ->
-                    viewModel.sendIntent(SearchUiIntent.Search(query))
-                },
-                onFocusChanged = onBottomSheetExpand
-            )
-        }
-    }
 
-}
-
-@Composable
-fun SearchScreen(
-    modifier: Modifier = Modifier,
-    searchResults: List<SearchContent>,
-    onSearch: (String) -> Unit,
-    onFocusChanged: (Boolean) -> Unit,
-) {
     var searchQuery by remember { mutableStateOf("카리나") }
 
     Column(
@@ -88,21 +59,43 @@ fun SearchScreen(
             modifier = Modifier,
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearch = onSearch,
-            onFocusChanged = onFocusChanged
+            onSearch = { query ->
+                viewModel.sendIntent(SearchUiIntent.Search(query))
+            },
+            onFocusChanged = onBottomSheetExpand
         )
 
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier
-//                .fillMaxSize()
-            ,
-            columns = StaggeredGridCells.Fixed(2),
-            state = rememberLazyStaggeredGridState(),
-            contentPadding = PaddingValues(4.dp),
-        ) {
-            items(searchResults.size) { item ->
+        when (val s = state) {
+            is SearchUiState.Loading -> {
+
+            }
+
+            is SearchUiState.Ready -> {
+                val contents = s.searchContents.collectAsLazyPagingItems()
+                SearchScreen(
+                    modifier = modifier,
+                    searchContents = contents,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+    searchContents: LazyPagingItems<SearchContent>,
+) {
+    LazyVerticalStaggeredGrid(
+        modifier = modifier,
+        columns = StaggeredGridCells.Fixed(2),
+        state = rememberLazyStaggeredGridState(),
+        contentPadding = PaddingValues(4.dp),
+    ) {
+        items(searchContents.itemCount) { item ->
+            searchContents[item]?.let { content ->
                 SearchItem(
-                    search = searchResults[item],
+                    search = content,
                     onClick = { /* TODO */ }
                 )
             }
@@ -152,8 +145,6 @@ fun SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
-//            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-//            .padding(horizontal = 16.dp, vertical = 8.dp)
             .onFocusChanged { onFocusChanged(it.isFocused) }
     )
 }

@@ -2,9 +2,12 @@ package com.knowmerce.app.ui.home.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.knowmerce.core.domain.model.SearchContent
 import com.knowmerce.core.domain.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -17,7 +20,7 @@ import javax.inject.Inject
 sealed interface SearchUiState {
     data object Loading : SearchUiState
     data class Ready(
-        val searchResults: List<SearchContent>,
+        val searchContents: Flow<PagingData<SearchContent>>,
     ) : SearchUiState
 }
 
@@ -66,10 +69,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 Timber.i("search: $query")
-                val searchResults = searchUseCase(query)
+                val searchContents = searchUseCase(query)
 
                 _state.value = SearchUiState.Ready(
-                    searchResults = searchResults
+                    searchContents = searchContents.cachedIn(viewModelScope)
                 )
             } catch (e: Exception) {
                 _state.value = SearchUiState.Loading

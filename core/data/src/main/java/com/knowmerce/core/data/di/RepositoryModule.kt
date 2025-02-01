@@ -1,5 +1,6 @@
 package com.knowmerce.core.data.di
 
+import com.knowmerce.core.data.datasource.local.DocumentDataSource
 import com.knowmerce.core.data.datasource.remote.KakaoDataSource
 import com.knowmerce.core.data.repository.SearchRepositoryImpl
 import com.knowmerce.core.domain.repository.SearchRepository
@@ -15,10 +16,12 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideSearchRepository(
-        remoteDataSource: KakaoDataSource
+        documentDataSource: DocumentDataSource,
+        kakaoDataSource: KakaoDataSource,
     ): SearchRepository {
         return SearchRepositoryImpl(
-            remoteDataSource = remoteDataSource
+            documentDataSource = documentDataSource,
+            kakaoDataSource = kakaoDataSource,
         )
     }
 }
