@@ -14,6 +14,8 @@ interface DocumentDataSource {
     ): PagingSource<Int, DocumentEntity>
 
     suspend fun deleteExpiredDocument(expiredTimestamp: Long)
+
+    suspend fun deleteAllDocument()
 }
 
 class DocumentDataSourceImpl @Inject constructor(
@@ -32,5 +34,9 @@ class DocumentDataSourceImpl @Inject constructor(
 
     override suspend fun deleteExpiredDocument(expiredTimestamp: Long) {
         documentDao.deleteExpiredDocument(expiredTimestamp)
+    }
+
+    override suspend fun deleteAllDocument() {
+        documentDao.deleteAllDocument()
     }
 }

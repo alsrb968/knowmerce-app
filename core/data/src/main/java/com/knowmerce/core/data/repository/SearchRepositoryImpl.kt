@@ -13,6 +13,8 @@ import com.knowmerce.core.domain.mapper.toSearchContent
 import com.knowmerce.core.domain.model.SearchContent
 import com.knowmerce.core.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -23,25 +25,33 @@ class SearchRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun search(query: String, pageSize: Int): Flow<PagingData<SearchContent>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = pageSize,
-                prefetchDistance = 5,
-                enablePlaceholders = false,
-            ),
-            remoteMediator = SearchRemoteMediator(
-                local = documentDataSource,
-                remote = kakaoDataSource,
-                query = query,
-            ),
-            pagingSourceFactory = {
-                documentDataSource.getValidDocument(
-                    keyword = query,
-                    validTimestamp = SearchRepository.before5MinutesTimestamp,
-                )
-            }
-        ).flow.map { pagingData ->
-            pagingData.map { it.toDocument().toSearchContent() }
+        return flow {
+            documentDataSource.deleteExpiredDocument(
+                expiredTimestamp = SearchRepository.before5MinutesTimestamp,
+            )
+
+            emitAll(
+                Pager(
+                    config = PagingConfig(
+                        pageSize = pageSize,
+                        prefetchDistance = 5,
+                        enablePlaceholders = false,
+                    ),
+                    remoteMediator = SearchRemoteMediator(
+                        local = documentDataSource,
+                        remote = kakaoDataSource,
+                        query = query,
+                    ),
+                    pagingSourceFactory = {
+                        documentDataSource.getValidDocument(
+                            keyword = query,
+                            validTimestamp = SearchRepository.before5MinutesTimestamp,
+                        )
+                    }
+                ).flow.map { pagingData ->
+                    pagingData.map { it.toDocument().toSearchContent() }
+                }
+            )
         }
     }
 }

@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface SearchRepository {
     companion object {
         private const val CACHE_DURATION = 5 * 60 // 5 minutes
-        val currentTimestamp = System.currentTimeMillis() / 1000
+        val currentTimestamp: Long
+            get() = System.currentTimeMillis() / 1000
         val before5MinutesTimestamp = currentTimestamp - CACHE_DURATION
     }
 

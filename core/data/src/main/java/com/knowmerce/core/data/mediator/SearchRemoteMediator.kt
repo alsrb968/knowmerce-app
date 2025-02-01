@@ -50,13 +50,7 @@ class SearchRemoteMediator(
             )
 
             if (loadType == LoadType.REFRESH) {
-                local.getValidDocument(
-                    keyword = query,
-                    validTimestamp = SearchRepository.before5MinutesTimestamp,
-                )
-                local.deleteExpiredDocument(
-                    expiredTimestamp = SearchRepository.before5MinutesTimestamp,
-                )
+                local.deleteAllDocument()
             }
             val documents = images.documents.map {
                 it.toDocumentEntity(

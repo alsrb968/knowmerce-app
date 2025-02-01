@@ -17,7 +17,7 @@ interface DocumentDao {
         SELECT *
         FROM document
         WHERE keyword = :keyword AND timestamp > :validTimestamp
-        ORDER BY datetime DESC
+        ORDER BY page ASC, datetime DESC
         """
     )
     fun getValidDocument(
@@ -33,4 +33,12 @@ interface DocumentDao {
         """
     )
     suspend fun deleteExpiredDocument(expiredTimestamp: Long)
+
+    @Query(
+        """
+        DELETE
+        FROM document
+        """
+    )
+    suspend fun deleteAllDocument()
 }
