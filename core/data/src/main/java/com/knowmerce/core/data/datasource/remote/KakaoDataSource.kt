@@ -4,6 +4,7 @@ import com.knowmerce.core.data.BuildConfig
 import com.knowmerce.core.data.api.KakaoApi
 import com.knowmerce.core.data.model.remote.ImageSearchResponse
 import com.knowmerce.core.data.model.remote.VideoClipSearchResponse
+import timber.log.Timber
 import javax.inject.Inject
 
 interface KakaoDataSource {
@@ -33,6 +34,7 @@ class KakaoDataSourceImpl @Inject constructor(
         page: Int,
         size: Int,
     ): ImageSearchResponse {
+        Timber.d("query: $query")
         return api.searchImage(
             query = query,
             sort = sort,
@@ -48,6 +50,7 @@ class KakaoDataSourceImpl @Inject constructor(
         page: Int,
         size: Int,
     ): VideoClipSearchResponse {
+        Timber.d("query: $query")
         return api.searchVideoClip(
             query = query,
             sort = sort,

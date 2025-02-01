@@ -1,9 +1,8 @@
 package com.knowmerce.core.data.di
 
 import android.content.Context
-import com.knowmerce.core.data.db.ImageDocumentDao
+import com.knowmerce.core.data.db.DocumentDao
 import com.knowmerce.core.data.db.SearchDatabase
-import com.knowmerce.core.data.db.VideoClipDocumentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,13 +23,7 @@ object DbModule {
 
     @Provides
     @Singleton
-    fun provideImageDocumentDao(
+    fun provideDocumentDao(
         database: SearchDatabase
-    ): ImageDocumentDao = database.imageDocumentDao()
-
-    @Provides
-    @Singleton
-    fun provideVideoClipDocumentDao(
-        database: SearchDatabase
-    ): VideoClipDocumentDao = database.videoClipDocumentDao()
+    ): DocumentDao = database.documentDao()
 }

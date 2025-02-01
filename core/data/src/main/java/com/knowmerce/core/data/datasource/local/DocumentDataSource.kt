@@ -1,60 +1,36 @@
 package com.knowmerce.core.data.datasource.local
 
-import com.knowmerce.core.data.db.ImageDocumentDao
-import com.knowmerce.core.data.db.VideoClipDocumentDao
-import com.knowmerce.core.data.model.local.ImageDocumentEntity
-import com.knowmerce.core.data.model.local.VideoClipDocumentEntity
+import androidx.paging.PagingSource
+import com.knowmerce.core.data.db.DocumentDao
+import com.knowmerce.core.data.model.local.DocumentEntity
 import javax.inject.Inject
 
 interface DocumentDataSource {
-    suspend fun insertImageDocument(imageDocument: List<ImageDocumentEntity>)
-    suspend fun getValidImageDocument(
+    suspend fun insertDocument(document: List<DocumentEntity>)
+
+    fun getValidDocument(
         keyword: String,
         validTimestamp: Long
-    ): List<ImageDocumentEntity>
+    ): PagingSource<Int, DocumentEntity>
 
-    suspend fun deleteExpiredImageDocument(expiredTimestamp: Long)
-
-    suspend fun insertVideoClipDocument(videoDocument: List<VideoClipDocumentEntity>)
-    suspend fun getValidVideoClipDocument(
-        keyword: String,
-        validTimestamp: Long
-    ): List<VideoClipDocumentEntity>
-
-    suspend fun deleteExpiredVideoClipDocument(expiredTimestamp: Long)
+    suspend fun deleteExpiredDocument(expiredTimestamp: Long)
 }
 
 class DocumentDataSourceImpl @Inject constructor(
-    private val imageDocumentDao: ImageDocumentDao,
-    private val videoClipDocumentDao: VideoClipDocumentDao,
+    private val documentDao: DocumentDao,
 ) : DocumentDataSource {
-    override suspend fun insertImageDocument(imageDocument: List<ImageDocumentEntity>) {
-        imageDocumentDao.insertImageDocument(imageDocument)
+    override suspend fun insertDocument(document: List<DocumentEntity>) {
+        documentDao.insertDocument(document)
     }
 
-    override suspend fun getValidImageDocument(
+    override fun getValidDocument(
         keyword: String,
         validTimestamp: Long
-    ): List<ImageDocumentEntity> {
-        return imageDocumentDao.getValidImageDocument(keyword, validTimestamp)
+    ): PagingSource<Int, DocumentEntity> {
+        return documentDao.getValidDocument(keyword, validTimestamp)
     }
 
-    override suspend fun deleteExpiredImageDocument(expiredTimestamp: Long) {
-        imageDocumentDao.deleteExpiredImageDocument(expiredTimestamp)
-    }
-
-    override suspend fun insertVideoClipDocument(videoDocument: List<VideoClipDocumentEntity>) {
-        videoClipDocumentDao.insertVideoClipDocument(videoDocument)
-    }
-
-    override suspend fun getValidVideoClipDocument(
-        keyword: String,
-        validTimestamp: Long
-    ): List<VideoClipDocumentEntity> {
-        return videoClipDocumentDao.getValidVideoClipDocument(keyword, validTimestamp)
-    }
-
-    override suspend fun deleteExpiredVideoClipDocument(expiredTimestamp: Long) {
-        videoClipDocumentDao.deleteExpiredVideoClipDocument(expiredTimestamp)
+    override suspend fun deleteExpiredDocument(expiredTimestamp: Long) {
+        documentDao.deleteExpiredDocument(expiredTimestamp)
     }
 }

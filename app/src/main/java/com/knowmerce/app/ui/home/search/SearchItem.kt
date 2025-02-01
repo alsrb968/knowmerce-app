@@ -30,8 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.knowmerce.core.domain.model.SearchContent
-import com.knowmerce.core.domain.model.SearchVideoClip
-import com.knowmerce.core.domain.model.displayedDatetime
 
 @Composable
 fun SearchItem(
@@ -74,9 +72,9 @@ fun SearchItem(
                 text = search.displayedDatetime,
             )
 
-            if (search is SearchVideoClip) {
+            search.displayedPlayTime?.let {
                 ItemText(
-                    text = search.displayedPlayTime,
+                    text = it,
                 )
             }
 

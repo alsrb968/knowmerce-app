@@ -5,8 +5,7 @@ import com.knowmerce.core.data.datasource.local.DocumentDataSource
 import com.knowmerce.core.data.datasource.local.DocumentDataSourceImpl
 import com.knowmerce.core.data.datasource.remote.KakaoDataSource
 import com.knowmerce.core.data.datasource.remote.KakaoDataSourceImpl
-import com.knowmerce.core.data.db.ImageDocumentDao
-import com.knowmerce.core.data.db.VideoClipDocumentDao
+import com.knowmerce.core.data.db.DocumentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,12 +18,10 @@ object DataSourceModule {
     @Provides
     @Singleton
     fun provideDocumentDataSource(
-        imageDocumentDao: ImageDocumentDao,
-        videoClipDocumentDao: VideoClipDocumentDao,
+        documentDao: DocumentDao
     ): DocumentDataSource {
         return DocumentDataSourceImpl(
-            imageDocumentDao = imageDocumentDao,
-            videoClipDocumentDao = videoClipDocumentDao,
+            documentDao = documentDao
         )
     }
 
