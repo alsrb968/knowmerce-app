@@ -8,6 +8,8 @@ import javax.inject.Inject
 interface DocumentDataSource {
     suspend fun insertDocument(document: List<DocumentEntity>)
 
+    suspend fun getLastDocument(keyword: String): DocumentEntity?
+
     fun getValidDocument(
         keyword: String,
         validTimestamp: Long
@@ -23,6 +25,10 @@ class DocumentDataSourceImpl @Inject constructor(
 ) : DocumentDataSource {
     override suspend fun insertDocument(document: List<DocumentEntity>) {
         documentDao.insertDocument(document)
+    }
+
+    override suspend fun getLastDocument(keyword: String): DocumentEntity? {
+        return documentDao.getLastDocument(keyword)
     }
 
     override fun getValidDocument(

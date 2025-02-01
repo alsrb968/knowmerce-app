@@ -23,15 +23,22 @@ class SearchRemoteMediator(
         state: PagingState<Int, DocumentEntity>
     ): MediatorResult {
         val page = when (loadType) {
-            LoadType.REFRESH -> 1
+            LoadType.REFRESH -> {
+                Timber.i("REFRESH")
+                1
+            }
+
+            LoadType.PREPEND -> {
+                Timber.i("PREPEND")
+                return MediatorResult.Success(endOfPaginationReached = true)
+            }
 
             LoadType.APPEND -> {
-                val lastItem = state.lastItemOrNull()
+                Timber.i("APPEND ${state.lastItemOrNull()}")
+                val lastItem = local.getLastDocument(query)
                     ?: return MediatorResult.Success(endOfPaginationReached = true)
                 lastItem.page + 1
             }
-
-            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
         }
 
         return try {
@@ -49,24 +56,26 @@ class SearchRemoteMediator(
                 size = size
             )
 
-            if (loadType == LoadType.REFRESH) {
-                local.deleteAllDocument()
-            }
-            val documents = images.documents.map {
-                it.toDocumentEntity(
-                    keyword = query,
-                    timestamp = SearchRepository.currentTimestamp,
-                    page = page,
-                )
-            } + videos.documents.map {
-                it.toDocumentEntity(
-                    keyword = query,
-                    timestamp = SearchRepository.currentTimestamp,
-                    page = page,
-                )
-            }.sortedByDescending { it.datetime }
+//            if (loadType == LoadType.REFRESH) {
+//                local.deleteAllDocument()
+//            }
+            val timestamp = SearchRepository.currentTimestamp
+            val documents =
+                images.documents.map {
+                    it.toDocumentEntity(
+                        keyword = query,
+                        timestamp = timestamp,
+                        page = page,
+                    )
+                } + videos.documents.map {
+                    it.toDocumentEntity(
+                        keyword = query,
+                        timestamp = timestamp,
+                        page = page,
+                    )
+                }
 
-            local.insertDocument(documents)
+            local.insertDocument(documents.sortedByDescending { it.datetime })
 
             MediatorResult.Success(endOfPaginationReached = images.meta.isEnd && videos.meta.isEnd)
         } catch (e: Exception) {

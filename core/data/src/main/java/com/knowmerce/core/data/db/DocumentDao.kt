@@ -16,6 +16,19 @@ interface DocumentDao {
         """
         SELECT *
         FROM document
+        WHERE keyword = :keyword
+        ORDER BY page DESC
+        LIMIT 1
+        """
+    )
+    suspend fun getLastDocument(
+        keyword: String
+    ): DocumentEntity?
+
+    @Query(
+        """
+        SELECT *
+        FROM document
         WHERE keyword = :keyword AND timestamp > :validTimestamp
         ORDER BY page ASC, datetime DESC
         """
