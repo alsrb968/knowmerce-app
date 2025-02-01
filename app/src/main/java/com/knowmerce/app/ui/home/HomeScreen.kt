@@ -4,22 +4,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Inventory
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -80,7 +80,6 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier
-                    .height(100.dp)
                     .onSizeChanged {
                         topBarHeight = it.height.dp
                     }
@@ -91,11 +90,18 @@ fun HomeScreen(
                         }
                     },
                 title = {
-                    Text(text = "즐겨찾기")
+                    Text(text = "내 보관함")
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                )
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Inventory,
+                        contentDescription = "검색",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(24.dp)
+                            .clip(RoundedCornerShape(50))
+                    )
+                },
             )
         },
         sheetDragHandle = {

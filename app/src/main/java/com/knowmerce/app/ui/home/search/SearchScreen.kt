@@ -101,7 +101,10 @@ fun SearchScreen(
             contentPadding = PaddingValues(4.dp),
         ) {
             items(searchResults.size) { item ->
-                SearchItem(search = searchResults[item])
+                SearchItem(
+                    search = searchResults[item],
+                    onClick = { /* TODO */ }
+                )
             }
         }
     }

@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +36,8 @@ import com.knowmerce.core.domain.model.displayedDatetime
 @Composable
 fun SearchItem(
     modifier: Modifier = Modifier,
-    search: SearchContent
+    search: SearchContent,
+    onClick: (() -> Unit)? = null,
 ) {
     var aspectRatio by remember { mutableFloatStateOf(1f) }
 
@@ -64,7 +68,7 @@ fun SearchItem(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             ItemText(
                 text = search.displayedDatetime,
@@ -79,6 +83,20 @@ fun SearchItem(
             ItemText(
                 text = search.title,
             )
+        }
+
+        if (onClick != null) {
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                onClick = onClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = "Keep",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -97,7 +115,7 @@ fun ItemText(
             .padding(4.dp),
         text = text,
         color = Color.White,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
