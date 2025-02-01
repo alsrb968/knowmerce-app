@@ -26,12 +26,12 @@ class SearchPagingSource(
             val images = kakaoDataSource.searchImage(
                 query = query,
                 page = page,
-                size = size
+                size = size / 2,
             )
             val videos = kakaoDataSource.searchVideoClip(
                 query = query,
                 page = page,
-                size = size
+                size = size / 2,
             )
 
             val searchContents = mutableListOf<SearchContent>()

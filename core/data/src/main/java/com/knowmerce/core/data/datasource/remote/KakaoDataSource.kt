@@ -9,14 +9,14 @@ import javax.inject.Inject
 interface KakaoDataSource {
     suspend fun searchImage(
         query: String,
-        sort: String = "accuracy",
+        sort: String = "recency",
         page: Int,
         size: Int,
     ): ImageSearchResponse
 
     suspend fun searchVideoClip(
         query: String,
-        sort: String = "accuracy",
+        sort: String = "recency",
         page: Int,
         size: Int,
     ): VideoClipSearchResponse

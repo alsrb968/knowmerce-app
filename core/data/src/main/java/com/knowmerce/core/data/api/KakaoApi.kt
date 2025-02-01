@@ -10,7 +10,7 @@ interface KakaoApi {
     @GET("v2/search/image")
     suspend fun searchImage(
         @Query("query") query: String,
-        @Query("sort") sort: String = "accuracy",
+        @Query("sort") sort: String = "recency",
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Header("Authorization") apiKey: String,
@@ -19,7 +19,7 @@ interface KakaoApi {
     @GET("v2/search/vclip")
     suspend fun searchVideoClip(
         @Query("query") query: String,
-        @Query("sort") sort: String = "accuracy",
+        @Query("sort") sort: String = "recency",
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Header("Authorization") apiKey: String,
