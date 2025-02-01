@@ -1,7 +1,9 @@
 package com.knowmerce.app.ui.home.search
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -50,7 +52,7 @@ fun SearchScreen(
         }
     }
 
-    var searchQuery by remember { mutableStateOf("카리나") }
+    var searchQuery by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier,
@@ -67,13 +69,15 @@ fun SearchScreen(
 
         when (val s = state) {
             is SearchUiState.Loading -> {
-
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             is SearchUiState.Ready -> {
                 val contents = s.searchContents.collectAsLazyPagingItems()
                 SearchScreen(
-                    modifier = modifier,
+                    modifier = Modifier.fillMaxSize(),
                     searchContents = contents,
                 )
             }
@@ -116,11 +120,11 @@ fun SearchBar(
 
     LaunchedEffect(Unit) {
         searchFlow
-            .debounce(500) // 500ms 대기 후 마지막 입력값 사용
+            .debounce(500)
             .collectLatest { text ->
-                if (text.isNotEmpty()) {
-                    onSearch(text)
-                }
+//                if (text.isNotEmpty()) {
+                onSearch(text)
+//                }
             }
     }
 
@@ -136,7 +140,10 @@ fun SearchBar(
         },
         trailingIcon = {
             if (query.isNotEmpty()) {
-                IconButton(onClick = { onQueryChange("") }) {
+                IconButton(onClick = {
+                    onQueryChange("")
+                    searchFlow.value = ""
+                }) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "입력 삭제")
                 }
             }

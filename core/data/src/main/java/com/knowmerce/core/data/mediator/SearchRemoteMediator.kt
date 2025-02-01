@@ -9,7 +9,6 @@ import com.knowmerce.core.data.datasource.remote.KakaoDataSource
 import com.knowmerce.core.data.mapper.local.toDocumentEntity
 import com.knowmerce.core.data.model.local.DocumentEntity
 import com.knowmerce.core.domain.repository.SearchRepository
-import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class SearchRemoteMediator(
@@ -23,18 +22,13 @@ class SearchRemoteMediator(
         state: PagingState<Int, DocumentEntity>
     ): MediatorResult {
         val page = when (loadType) {
-            LoadType.REFRESH -> {
-                Timber.i("REFRESH")
-                1
-            }
+            LoadType.REFRESH -> 1
 
             LoadType.PREPEND -> {
-                Timber.i("PREPEND")
                 return MediatorResult.Success(endOfPaginationReached = true)
             }
 
             LoadType.APPEND -> {
-                Timber.i("APPEND ${state.lastItemOrNull()}")
                 val lastItem = local.getLastDocument(query)
                     ?: return MediatorResult.Success(endOfPaginationReached = true)
                 lastItem.page + 1
@@ -42,7 +36,6 @@ class SearchRemoteMediator(
         }
 
         return try {
-            Timber.i("page: $page")
             val size = state.config.pageSize / 2
 
             val images = remote.searchImage(

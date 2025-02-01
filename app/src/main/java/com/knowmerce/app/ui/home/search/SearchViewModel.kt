@@ -69,6 +69,11 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 Timber.i("search: $query")
+                if (query.isBlank()) {
+                    _state.value = SearchUiState.Loading
+                    return@launch
+                }
+
                 val searchContents = searchUseCase(query)
 
                 _state.value = SearchUiState.Ready(
