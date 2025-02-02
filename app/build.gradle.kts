@@ -20,9 +20,26 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        val localKeystore = rootProject.file("release.keystore")
+        getByName("debug") {
+            storeFile = localKeystore
+            storePassword = "12345678"
+            keyAlias = "keystore"
+            keyPassword = "12345678"
+        }
+        create("release") {
+            storeFile = localKeystore
+            storePassword = "12345678"
+            keyAlias = "keystore"
+            keyPassword = "12345678"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
