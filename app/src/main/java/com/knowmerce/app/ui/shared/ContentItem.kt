@@ -1,7 +1,8 @@
-package com.knowmerce.app.ui.home.search
+package com.knowmerce.app.ui.shared
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +38,14 @@ import coil.request.ImageRequest
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.Flow
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchItem(
+fun ContentItem(
     modifier: Modifier = Modifier,
     search: SearchContent,
     isFavorite: Flow<Boolean>,
     onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
 ) {
     var aspectRatio by remember { mutableFloatStateOf(1f) }
 
@@ -51,7 +54,10 @@ fun SearchItem(
             .fillMaxWidth()
             .aspectRatio(aspectRatio)
             .padding(4.dp)
-            .clickable { onClick() },
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick,
+            ),
     ) {
         AsyncImage(
             modifier = Modifier

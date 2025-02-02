@@ -1,6 +1,7 @@
 package com.knowmerce.app.ui.home.favorite
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -13,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.knowmerce.app.ui.home.search.SearchItem
+import com.knowmerce.app.ui.shared.ContentItem
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOf
@@ -37,6 +38,7 @@ fun FavoriteScreen(
     FavoriteScreen(
         modifier = modifier,
         searchContents = state.searchContents.collectAsLazyPagingItems(),
+        removeFavorite = { viewModel.sendIntent(FavoriteUiIntent.RemoveFavorite(it)) }
     )
 }
 
@@ -44,18 +46,20 @@ fun FavoriteScreen(
 fun FavoriteScreen(
     modifier: Modifier = Modifier,
     searchContents: LazyPagingItems<SearchContent>,
+    removeFavorite: (SearchContent) -> Unit,
 ) {
     LazyVerticalStaggeredGrid(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
         state = rememberLazyStaggeredGridState(),
         contentPadding = PaddingValues(4.dp),
     ) {
         items(searchContents.itemCount) { item ->
             searchContents[item]?.let { content ->
-                SearchItem(
+                ContentItem(
                     search = content,
                     isFavorite = flowOf(false),
+                    onLongClick = { removeFavorite(content) }
                 )
             }
         }
