@@ -54,9 +54,14 @@ fun FavoriteScreen(
         state = rememberLazyStaggeredGridState(),
         contentPadding = PaddingValues(4.dp),
     ) {
-        items(searchContents.itemCount) { item ->
+        items(
+            count = searchContents.itemCount,
+            key = { index -> searchContents[index]?.thumbnailUrl ?: index }
+        ) { item ->
             searchContents[item]?.let { content ->
                 ContentItem(
+                    modifier = Modifier
+                        .animateItem(),
                     search = content,
                     isFavorite = flowOf(false),
                     onLongClick = { removeFavorite(content) }
