@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.knowmerce.app.R
 import com.knowmerce.app.ui.home.HomeScreen
+import com.knowmerce.app.ui.theme.KnowmerceAppTheme
+import com.knowmerce.app.ui.tooling.DevicePreviews
 
 @Composable
 fun KnowmerceApp(
@@ -45,4 +47,12 @@ fun OfflineDialog(onRetry: () -> Unit) {
             }
         }
     )
+}
+
+@DevicePreviews
+@Composable
+private fun OfflineDialogPreview() {
+    KnowmerceAppTheme {
+        OfflineDialog(onRetry = {})
+    }
 }

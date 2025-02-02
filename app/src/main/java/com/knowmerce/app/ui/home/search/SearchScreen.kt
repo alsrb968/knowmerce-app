@@ -29,6 +29,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.knowmerce.app.R
 import com.knowmerce.app.ui.shared.ContentItemList
+import com.knowmerce.app.ui.theme.KnowmerceAppTheme
+import com.knowmerce.app.ui.tooling.DevicePreviews
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -131,7 +133,10 @@ fun SearchBar(
         },
         placeholder = { Text(stringResource(R.string.search_hint)) },
         leadingIcon = {
-            Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search_icon))
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(R.string.search_icon)
+            )
         },
         trailingIcon = {
             if (query.isNotEmpty()) {
@@ -139,7 +144,10 @@ fun SearchBar(
                     onQueryChange("")
                     searchFlow.value = ""
                 }) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.delete_input))
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.delete_input)
+                    )
                 }
             }
         },
@@ -149,4 +157,17 @@ fun SearchBar(
             .padding(8.dp)
             .onFocusChanged { onFocusChanged(it.isFocused) }
     )
+}
+
+@DevicePreviews
+@Composable
+private fun SearchBarPreview() {
+    KnowmerceAppTheme {
+        SearchBar(
+            query = "Search query",
+            onQueryChange = {},
+            onSearch = {},
+            onFocusChanged = {}
+        )
+    }
 }

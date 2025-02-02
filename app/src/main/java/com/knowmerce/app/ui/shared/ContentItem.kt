@@ -42,8 +42,12 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.knowmerce.app.R
+import com.knowmerce.app.ui.theme.KnowmerceAppTheme
+import com.knowmerce.app.ui.tooling.DevicePreviews
+import com.knowmerce.app.ui.tooling.PreviewSearchContent
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ContentItemList(
@@ -179,4 +183,15 @@ fun ItemText(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
+}
+
+@DevicePreviews
+@Composable
+private fun ContentItemPreview() {
+    KnowmerceAppTheme {
+        ContentItem(
+            search = PreviewSearchContent,
+            isFavorite = flowOf(true),
+        )
+    }
 }
