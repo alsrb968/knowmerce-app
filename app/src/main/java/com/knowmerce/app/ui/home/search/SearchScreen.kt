@@ -20,11 +20,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.knowmerce.app.R
 import com.knowmerce.app.ui.shared.ContentItemList
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.FlowPreview
@@ -40,12 +43,14 @@ fun SearchScreen(
     onSnackbar: (String) -> Unit,
     onBottomSheetExpand: (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is SearchUiEffect.ShowToast -> onSnackbar(effect.message)
+                is SearchUiEffect.ShowToastId -> onSnackbar(context.getString(effect.messageId))
             }
         }
     }
@@ -124,9 +129,9 @@ fun SearchBar(
             onQueryChange(it)
             searchFlow.value = it
         },
-        placeholder = { Text("검색어를 입력하세요") },
+        placeholder = { Text(stringResource(R.string.search_hint)) },
         leadingIcon = {
-            Icon(imageVector = Icons.Default.Search, contentDescription = "검색 아이콘")
+            Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search_icon))
         },
         trailingIcon = {
             if (query.isNotEmpty()) {
@@ -134,7 +139,7 @@ fun SearchBar(
                     onQueryChange("")
                     searchFlow.value = ""
                 }) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "입력 삭제")
+                    Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.delete_input))
                 }
             }
         },

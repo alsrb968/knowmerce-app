@@ -8,10 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.knowmerce.app.R
 import com.knowmerce.app.ui.home.HomeScreen
-import com.knowmerce.app.ui.splash.SplashScreen
 
 @Composable
 fun KnowmerceApp(
@@ -23,14 +24,6 @@ fun KnowmerceApp(
             navController = appState.navController,
             startDestination = Screen.Home.route
         ) {
-            composable(Screen.Splash.route) { backStackEntry ->
-                SplashScreen(
-                    navigateToHome = {
-                        appState.navigateToHome(backStackEntry)
-                    }
-                )
-            }
-
             composable(Screen.Home.route) { backstackEntry ->
                 HomeScreen()
             }
@@ -44,11 +37,11 @@ fun KnowmerceApp(
 fun OfflineDialog(onRetry: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = "인터넷 연결 오류") },
-        text = { Text(text = "음악 정보 리스트를 가져올 수 없습니다.\n인터넷 연결을 확인 후 다시 시도해주세요.") },
+        title = { Text(text = stringResource(R.string.network_error_title)) },
+        text = { Text(text = stringResource(R.string.network_error_message)) },
         confirmButton = {
             TextButton(onClick = onRetry) {
-                Text(text = "재시도")
+                Text(text = stringResource(R.string.retry))
             }
         }
     )

@@ -18,7 +18,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 sealed class Screen(val route: String) {
-    data object Splash : Screen("splash")
     data object Home : Screen("home")
 }
 
@@ -43,11 +42,7 @@ class KnowmerceAppState(
 
     fun navigateToHome(from: NavBackStackEntry) {
         if (from.lifecycleIsResumed()) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Splash.route) {
-                    inclusive = true
-                }
-            }
+            navController.navigate(Screen.Home.route)
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.knowmerce.app.R
 import com.knowmerce.core.domain.model.SearchContent
 import com.knowmerce.core.domain.usecase.AddFavoriteUseCase
 import com.knowmerce.core.domain.usecase.IsFavoriteUseCase
@@ -34,6 +35,7 @@ sealed interface SearchUiIntent {
 
 sealed interface SearchUiEffect {
     data class ShowToast(val message: String) : SearchUiEffect
+    data class ShowToastId(val messageId: Int) : SearchUiEffect
 }
 
 @HiltViewModel
@@ -98,10 +100,10 @@ class SearchViewModel @Inject constructor(
             try {
                 if (isFavorite(searchContent).first()) {
                     removeFavoriteUseCase(searchContent)
-                    _effect.emit(SearchUiEffect.ShowToast("내 보관함에서 삭제되었습니다."))
+                    _effect.emit(SearchUiEffect.ShowToastId(R.string.my_storage_delete))
                 } else {
                     addFavoriteUseCase(searchContent)
-                    _effect.emit(SearchUiEffect.ShowToast("내 보관함에 추가되었습니다."))
+                    _effect.emit(SearchUiEffect.ShowToastId(R.string.my_storage_added))
                 }
             } catch (e: Exception) {
                 _effect.emit(SearchUiEffect.ShowToast(e.message ?: "Unknown error"))

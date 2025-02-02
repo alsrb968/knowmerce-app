@@ -34,8 +34,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.knowmerce.app.R
 import com.knowmerce.app.ui.home.favorite.FavoriteScreen
 import com.knowmerce.app.ui.home.search.SearchScreen
 import kotlinx.coroutines.launch
@@ -90,12 +92,12 @@ fun HomeScreen(
                         }
                     },
                 title = {
-                    Text(text = "내 보관함")
+                    Text(text = stringResource(R.string.my_storage))
                 },
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Inventory,
-                        contentDescription = "검색",
+                        contentDescription = stringResource(R.string.search),
                         modifier = Modifier
                             .padding(8.dp)
                             .size(24.dp)

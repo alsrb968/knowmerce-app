@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -19,12 +20,14 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = hiltViewModel(),
     onSnackbar: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is FavoriteUiEffect.ShowToast -> onSnackbar(effect.message)
+                is FavoriteUiEffect.ShowToastId -> onSnackbar(context.getString(effect.messageId))
             }
         }
     }

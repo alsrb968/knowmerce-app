@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +41,7 @@ import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.knowmerce.app.R
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.Flow
 
@@ -152,7 +154,7 @@ fun ContentItem(
                     .align(Alignment.TopEnd)
                     .padding(4.dp),
                 imageVector = Icons.Default.CheckCircle,
-                contentDescription = "Favorite",
+                contentDescription = stringResource(R.string.favorite),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

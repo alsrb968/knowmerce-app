@@ -3,6 +3,7 @@ package com.knowmerce.app.ui.home.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.knowmerce.app.R
 import com.knowmerce.core.domain.model.SearchContent
 import com.knowmerce.core.domain.usecase.AddFavoriteUseCase
 import com.knowmerce.core.domain.usecase.GetFavoritesUseCase
@@ -29,6 +30,7 @@ sealed interface FavoriteUiIntent {
 
 sealed interface FavoriteUiEffect {
     data class ShowToast(val message: String) : FavoriteUiEffect
+    data class ShowToastId(val messageId: Int) : FavoriteUiEffect
 }
 
 @HiltViewModel
@@ -75,9 +77,9 @@ class FavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 addFavoriteUseCase(searchContent)
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함에 추가되었습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToastId(R.string.my_storage_added))
             } catch (e: Exception) {
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함에 추가하는 중 오류가 발생했습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToast(e.message ?: ""))
             }
         }
     }
@@ -86,9 +88,9 @@ class FavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 removeFavoriteUseCase(searchContent)
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함에서 삭제되었습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToastId(R.string.my_storage_delete))
             } catch (e: Exception) {
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함에서 삭제하는 중 오류가 발생했습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToast(e.message ?: ""))
             }
         }
     }
@@ -97,9 +99,9 @@ class FavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 removeAllFavoritesUseCase()
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함이 비워졌습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToastId(R.string.my_storage_empty))
             } catch (e: Exception) {
-                _effect.emit(FavoriteUiEffect.ShowToast("내 보관함을 비우는 중 오류가 발생했습니다."))
+                _effect.emit(FavoriteUiEffect.ShowToast(e.message ?: ""))
             }
         }
     }

@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">KnowmerceApp</string>
+    <string name="app_name" translatable="false">KnowmerceApp</string>
+
+    <string name="network_error_title">Network connection error</string>
+    <string name="network_error_message">Please check your network connection and try again.</string>
+    <string name="retry">Retry</string>
+
+    <string name="favorite">Favorite</string>
+    <string name="my_storage">My Storage</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Please enter your search term</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="delete_input">Delete Input</string>
+    <string name="my_storage_delete">It has been deleted from my archive.</string>
+    <string name="my_storage_added">Added to my archive.</string>
+    <string name="my_storage_empty">My storage is empty.</string>
 </resources>
