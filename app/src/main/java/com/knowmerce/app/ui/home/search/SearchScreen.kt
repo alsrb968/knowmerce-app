@@ -2,13 +2,9 @@ package com.knowmerce.app.ui.home.search
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -29,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.knowmerce.app.ui.shared.ContentItem
+import com.knowmerce.app.ui.shared.ContentItemList
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -95,27 +91,12 @@ fun SearchScreen(
     isFavorite: (SearchContent) -> Flow<Boolean>,
     toggleFavorite: (SearchContent) -> Unit,
 ) {
-    LazyVerticalStaggeredGrid(
+    ContentItemList(
         modifier = modifier,
-        columns = StaggeredGridCells.Fixed(2),
-        state = rememberLazyStaggeredGridState(),
-        contentPadding = PaddingValues(4.dp),
-    ) {
-        items(
-            count = searchContents.itemCount,
-            key = { index -> searchContents[index]?.thumbnailUrl ?: index }
-        ) { item ->
-            searchContents[item]?.let { content ->
-                ContentItem(
-                    modifier = Modifier
-                        .animateItem(),
-                    search = content,
-                    isFavorite = isFavorite(content),
-                    onClick = { toggleFavorite(content) }
-                )
-            }
-        }
-    }
+        searchContents = searchContents,
+        isFavorite = isFavorite,
+        onClick = { toggleFavorite(it) }
+    )
 }
 
 @OptIn(FlowPreview::class)

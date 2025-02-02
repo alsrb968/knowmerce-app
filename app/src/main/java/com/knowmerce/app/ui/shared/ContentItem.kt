@@ -6,10 +6,14 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -32,11 +36,44 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.Flow
+
+@Composable
+fun ContentItemList(
+    modifier: Modifier = Modifier,
+    searchContents: LazyPagingItems<SearchContent>,
+    isFavorite: (SearchContent) -> Flow<Boolean>,
+    onClick: (SearchContent) -> Unit = {},
+    onLongClick: (SearchContent) -> Unit = {},
+) {
+    LazyVerticalStaggeredGrid(
+        modifier = modifier,
+        columns = StaggeredGridCells.Fixed(2),
+        state = rememberLazyStaggeredGridState(),
+        contentPadding = PaddingValues(4.dp),
+    ) {
+        items(
+            count = searchContents.itemCount,
+            key = { index -> searchContents[index]?.thumbnailUrl ?: index }
+        ) { item ->
+            searchContents[item]?.let { content ->
+                ContentItem(
+                    modifier = Modifier
+                        .animateItem(),
+                    search = content,
+                    isFavorite = isFavorite(content),
+                    onClick = { onClick(content) },
+                    onLongClick = { onLongClick(content) },
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

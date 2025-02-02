@@ -1,20 +1,14 @@
 package com.knowmerce.app.ui.home.favorite
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.knowmerce.app.ui.shared.ContentItem
+import com.knowmerce.app.ui.shared.ContentItemList
 import com.knowmerce.core.domain.model.SearchContent
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOf
@@ -48,25 +42,10 @@ fun FavoriteScreen(
     searchContents: LazyPagingItems<SearchContent>,
     removeFavorite: (SearchContent) -> Unit,
 ) {
-    LazyVerticalStaggeredGrid(
-        modifier = modifier.fillMaxSize(),
-        columns = StaggeredGridCells.Fixed(2),
-        state = rememberLazyStaggeredGridState(),
-        contentPadding = PaddingValues(4.dp),
-    ) {
-        items(
-            count = searchContents.itemCount,
-            key = { index -> searchContents[index]?.thumbnailUrl ?: index }
-        ) { item ->
-            searchContents[item]?.let { content ->
-                ContentItem(
-                    modifier = Modifier
-                        .animateItem(),
-                    search = content,
-                    isFavorite = flowOf(false),
-                    onLongClick = { removeFavorite(content) }
-                )
-            }
-        }
-    }
+    ContentItemList(
+        modifier = modifier,
+        searchContents = searchContents,
+        isFavorite = { flowOf(false) },
+        onLongClick = { removeFavorite(it) }
+    )
 }
