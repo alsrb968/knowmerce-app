@@ -14,3 +14,10 @@
 ### 화면2
 - [x] 내 보관함 화면, 보관 순서대로 표시
 - [x] 보관한 아이템 리스트는 재시작되어도 유지 (로컬 DB)
+
+## 스크린샷
+<p align="center">
+    <img src="screenshot/Screenshot_20250202_145943.png" width="30%" />
+    <img src="screenshot/Screenshot_20250202_150039.png" width="30%" />
+    <img src="screenshot/Screenshot_20250202_150051.png" width="30%" />
+</p>
