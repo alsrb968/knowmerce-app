@@ -24,15 +24,15 @@ android {
         val localKeystore = rootProject.file("release.keystore")
         getByName("debug") {
             storeFile = localKeystore
-            storePassword = "12345678"
+            storePassword = "123456"
             keyAlias = "keystore"
-            keyPassword = "12345678"
+            keyPassword = "123456"
         }
         create("release") {
             storeFile = localKeystore
-            storePassword = "12345678"
+            storePassword = "123456"
             keyAlias = "keystore"
-            keyPassword = "12345678"
+            keyPassword = "123456"
         }
     }
 
